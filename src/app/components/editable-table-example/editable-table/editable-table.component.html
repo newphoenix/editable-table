@@ -1,0 +1,58 @@
+<div class="container-fluid">
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                @for(key of keys; track key){
+                <th scope="col">
+                    {{key}}
+                </th>
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @for(row of data; track i; let i = $index){
+            <tr>
+                @for(key of keys; track key; let j = $index){
+                <!-- the if statement is only to define variable fieldControl so the code because less
+                    verbose, we need to write and call function toFormControl(row.currentData.get(key))                                 
+                -->    
+                <td *ngIf="toFormControl(row.currentData.get(key)) as fieldControl">                                   
+                    <input [id]="'a'+i+j" type="text" [formControl]="fieldControl" class="" [value]="fieldControl?.value" [readOnly]="row.readOnly" [ngClass]="{'is-invalid': fieldControl.errors && (fieldControl.dirty || fieldControl.touched) , 'form-control' : !row.readOnly , 'form-control-plaintext' : row.readOnly}">
+                    <div class="invalid-feedback" *ngIf="!row.readOnly && fieldControl.invalid && (fieldControl.dirty || fieldControl.touched)" >
+                        <div *ngIf="fieldControl.errors?.required">{{validationMessages.get(key)?.get('required')?.msg}}</div>
+                        <div *ngIf="fieldControl.errors?.minlength">{{validationMessages.get(key)?.get('minLength')?.msg}}</div>                                       
+                        <div *ngIf="fieldControl.errors?.maxlength">{{validationMessages.get(key)?.get('maxLength')?.msg}}</div>                                        
+                        <div *ngIf="fieldControl.errors?.email">{{validationMessages.get(key)?.get('email')?.msg}}</div>
+                        <div *ngIf="fieldControl.errors?.min">{{validationMessages.get(key)?.get('min')?.msg}}</div> 
+                        <div *ngIf="fieldControl.errors?.max">{{validationMessages.get(key)?.get('max')?.msg}}</div>
+                        <div *ngIf="fieldControl.errors?.pattern">{{validationMessages.get(key)?.get('pattern')?.msg}}</div>   
+                    </div>
+                </td>             
+                }
+
+                @if(row.readOnly){
+                    <td>
+                        <button class="btn btn-primary fas fa-pen mr-2" (click)="makeEditable(row,i)"></button>
+                        <button class="btn btn-danger fas fa-trash" (click)="delete(i)"></button>
+                    </td>
+                }
+                @else if(!row.readOnly){
+                    <td>
+                        <button class="btn btn-success fas fa-save mr-2" (click)="save(row)"></button>
+                        <button class="btn btn-warning fas fa-ban" (click)="cancel(row)"></button>
+                    </td>
+                }
+                
+            </tr>            
+            }
+
+
+        </tbody>
+
+    </table>
+
+
+</div>

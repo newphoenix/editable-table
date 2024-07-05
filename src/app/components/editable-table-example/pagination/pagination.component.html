@@ -1,0 +1,15 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [ngClass]="{disabled: first()}"> <a class="page-link" href="javascript:void(0)"
+        (click)="loadPage(currentPage-1)">Previous</a></li>
+
+
+    @for(i of [].constructor(totalPages()); track idx; let idx = $index){
+    <li class="page-item" [ngClass]="{active : (currentPage == idx)}"><a class="page-link" href='javascript:void(0)'
+        (click)="loadPage(idx)">{{idx+1}}</a></li>
+    }
+
+    <li class="page-item" [ngClass]="{disabled: last()}"><a class="page-link" href="javascript:void(0)"
+        (click)="loadPage(currentPage+1)">Next</a></li>
+  </ul>
+</nav>
